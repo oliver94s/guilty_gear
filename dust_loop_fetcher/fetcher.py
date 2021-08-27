@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 
-logging.basicConfig(filename='fetcher.log', level=logging.DEBUG)
+logging.basicConfig(filename='fetcher.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -31,17 +31,16 @@ characters = [
 
 DUSTLOOP_COM = "https://www.dustloop.com/wiki/index.php?title=GGST/{}/Frame_Data"
 
-# urllib.urlretrieve(DUSTLOOP_COM.format(characters[0]), "test.txt")
-
 def fetch_char_frame_data(character):
     logging.info("Fetching data for %s" % character)
     try:
-        with urlopen(DUSTLOOP_COM.format(character)) as f:
+        with urlopen(DUSTLOOP_COM.format(character), timeout=5) as f:
             myfile = f.read()
             soup = BeautifulSoup(myfile, 'html.parser')
     except:
         print('failed to collect data for character: %s' % character)
-        logging.error("Ran into Error: %s" % sys.exc_info()[0])
+        logging.error("Ran into Error: %s" % sys.exc_info()[0].message)
+        logging.error("Failed to fetch data for character: %s" % character)
         return 
     
     frame_data = []
@@ -70,7 +69,6 @@ def fetch_char_frame_data(character):
             
             frame_data.append(temp_headers)
     
-
     output_dir = os.path.join("frame_data")
     frame_data_json = os.path.join(output_dir, "%s.json" % character)
     if not os.path.exists(output_dir):
