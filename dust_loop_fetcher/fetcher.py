@@ -2,12 +2,18 @@ import copy
 import json
 import logging 
 import os
+import socket
 import sys
+
+socket.setdefaulttimeout(3)
 
 logging.basicConfig(filename='fetcher.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from PIL import Image
+
 
 characters = [
     "Anji_Mito",
@@ -79,6 +85,40 @@ def fetch_char_frame_data(character):
     
     logging.info("Successfully fetched data for %s" % character)
 
+DUSTLOOP_GUILTY_GEAR_STRIVE_INDEX = "https://dustloop.com/wiki/index.php?title=Guilty_Gear_-Strive-"
+DUSTLOOP = "https://dustloop.com"
+
+def fetch_char_icons(character):
+    try:
+        with urlopen(DUSTLOOP_GUILTY_GEAR_STRIVE_INDEX, timeout=5) as f:
+            myfile = f.read()
+            soup = BeautifulSoup(myfile, 'html.parser')
+    except:
+        print('failed to collect data for character: %s' % character)
+        logging.error("Ran into Error: %s" % sys.exc_info()[0].message)
+        logging.error("Failed to fetch data for character: %s" % character)
+        return
+
+    hrefs = soup.find_all("a", href="/wiki/index.php?title=GGST/%s" % character)
+    for href in hrefs:
+        logging.info("looking character icon %s" % character)
+        url = "%s%s" % (DUSTLOOP, href.contents[0]['src'])
+        icon_dir = os.path.join('icons')
+        output_png = os.path.join(icon_dir, "%s.png" % character)
+        if not os.path.exists(icon_dir):
+            os.makedirs(icon_dir)
+        
+        retry_count = 5
+        while retry_count < 5:
+            try:
+                urllib.request.urlretrieve(url, output_png)
+            except urllib.error.URLError:
+                logging.error("Failed to fetch data for character: %s. Retry attempt %d out of %d" % (character, retry_count, 5))
+        
+        return
+    logging.info("Successfully got icon for %s" % character)
+
 if __name__ == "__main__":
     for character in characters:
         fetch_char_frame_data(character)
+        fetch_char_icons(character)
