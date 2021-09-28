@@ -1,85 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     <h1>{{ character.name }}</h1>
     <table  id="data" class="table table-striped">
         <thead>
-            <th>
-                <p>input</p>
-            </th>
-            <th>
-                <p>damage</p>
-            </th>
-            <th>
-                <p>guard</p>
-            </th>
-            <th>
-                <p>startup</p>
-            </th>
-            <th>
-                <p>active</p>
-            </th>
-            <th>
-                <p>recovery</p>
-            </th>
-            <th>
-                <p>onBlock</p>
-            </th>
-            <th>
-                <p>onHit</p>
-            </th>
-            <th>
-                <p>riscGain</p>
-            </th>
-            <th>
-                <p>level</p>
-            </th>
-            <th>
-                <p>invuln</p>
-            </th>
-            <th>
-                <p>prorate</p>
-            </th>
+            <th></th>
+            <th>input</th>
+            <th>damage</th>
+            <th>guard</th>
+            <th>startup</th>
+            <th>active</th>
+            <th>recovery</th>
+            <th>onBlock</th>
+            <th>onHit</th>
+            <th>riscGain</th>
+            <th>level</th>
+            <th>invuln</th>
+            <th>prorate</th>
         <thead>
         <tbody>
             {% for data in character.data %}
             <tr valign="top">
-                <td>
-                    <p>{{ data.input }}</p>
-                </td>
-                <td>
-                    <p>{{ data.damage }}</p>
-                </td>
-                <td>
-                    <p>{{ data.guard }}</p>
-                </td>
-                <td>
-                    <p>{{ data.startup }}</p>
-                </td>
-                <td>
-                    <p>{{ data.active }}</p>
-                </td>
-                <td>
-                    <p>{{ data.recovery }}</p>
-                </td>
-                <td>
-                    <p>{{ data.onBlock }}</p>
-                </td>
-                <td>
-                    <p>{{ data.onHit }}</p>
-                </td>
-                <td>
-                    <p>{{ data.riscGain }}</p>
-                </td>
-                <td>
-                    <p>{{ data.level }}</p>
-                </td>
-                <td>
-                    <p>{{ data.invuln }}</p>
-                </td>
-                <td>
-                    <p>{{ data.prorate }}</p>
-                </td>
+                <td></td>
+                <td><p>{{ data.input }}</p></td>
+                <td><p>{{ data.damage }}</p></td>
+                <td><p>{{ data.guard }}</p></td>
+                <td><p>{{ data.startup }}</p></td>
+                <td><p>{{ data.active }}</p></td>
+                <td><p>{{ data.recovery }}</p></td>
+                <td><p>{{ data.onBlock }}</p></td>
+                <td><p>{{ data.onHit }}</p></td>
+                <td><p>{{ data.riscGain }}</p></td>
+                <td><p>{{ data.level }}</p></td>
+                <td><p>{{ data.invuln }}</p></td>
+                <td><p>{{ data.prorate }}</p></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -88,23 +43,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
-    $(document).ready(function () {
-      $('#data').DataTable({
-        columns: [
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null],
-      });
-    });
-  </script>
+<script src="{{url_for('static', filename='char_data.js')}}"></script>
 {% endblock %}
